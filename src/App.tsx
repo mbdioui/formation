@@ -3,17 +3,18 @@ import {
   BookOpen,
   Code2,
   Smartphone,
-  Star,
   Users,
-  CheckCircle2,
-  X,
-  AlertCircle,
   LogIn,
   LogOut,
 } from 'lucide-react';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, User } from 'firebase/auth';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from './firebase';
+import { FeatureCard } from './components/FeatureCard';
+import { CourseCard } from './components/CourseCard';
+import { TestimonialCard } from './components/TestimonialCard';
+import { LoginModal } from './components/LoginModal';
+import { RegisterModal } from './components/RegisterModal';
 
 interface FormData {
   name: string;
@@ -175,7 +176,6 @@ function App() {
         createdAt: serverTimestamp(),
       });
 
-      // Déconnexion immédiate après la création du compte
       await signOut(auth);
 
       setSubmitSuccess(true);
@@ -357,287 +357,26 @@ function App() {
         </div>
       </section>
 
-      {isLoginModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl max-w-md w-full p-8 relative">
-            <button
-              onClick={closeLoginModal}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-            >
-              <X className="w-6 h-6" />
-            </button>
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={closeLoginModal}
+        onSubmit={handleLoginSubmit}
+        formData={loginFormData}
+        onChange={handleLoginChange}
+        error={loginError}
+        isSubmitting={isSubmitting}
+      />
 
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
-              Connexion
-            </h2>
-
-            <form onSubmit={handleLoginSubmit} className="space-y-4">
-              <div>
-                <label
-                  htmlFor="login-email"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="login-email"
-                  name="email"
-                  value={loginFormData.email}
-                  onChange={handleLoginChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="john@example.com"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="login-password"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                  Mot de passe
-                </label>
-                <input
-                  type="password"
-                  id="login-password"
-                  name="password"
-                  value={loginFormData.password}
-                  onChange={handleLoginChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="••••••••"
-                />
-              </div>
-
-              {loginError && (
-                <p className="text-sm text-red-600 text-center flex items-center justify-center">
-                  <AlertCircle className="w-4 h-4 mr-1" />
-                  {loginError}
-                </p>
-              )}
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className={`w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg transition-colors ${
-                  isSubmitting
-                    ? 'opacity-50 cursor-not-allowed'
-                    : 'hover:bg-blue-700'
-                }`}
-              >
-                {isSubmitting ? 'Connexion...' : 'Se connecter'}
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl max-w-md w-full p-8 relative">
-            <button
-              onClick={closeModal}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-            >
-              <X className="w-6 h-6" />
-            </button>
-
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
-              Inscrivez-vous
-            </h2>
-
-            {submitSuccess ? (
-              <div className="text-center py-8">
-                <CheckCircle2 className="w-16 h-16 text-green-500 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                  Inscription réussie !
-                </h3>
-                <p className="text-gray-600">
-                  Vous allez être redirigé vers la page de prise de rendez-vous.
-                </p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    Nom complet
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                      errors.name ? 'border-red-500' : 'border-gray-300'
-                    }`}
-                    placeholder="John Doe"
-                  />
-                  {errors.name && (
-                    <p className="mt-1 text-sm text-red-600 flex items-center">
-                      <AlertCircle className="w-4 h-4 mr-1" />
-                      {errors.name}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                      errors.email ? 'border-red-500' : 'border-gray-300'
-                    }`}
-                    placeholder="john@example.com"
-                  />
-                  {errors.email && (
-                    <p className="mt-1 text-sm text-red-600 flex items-center">
-                      <AlertCircle className="w-4 h-4 mr-1" />
-                      {errors.email}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="password"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    Mot de passe
-                  </label>
-                  <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                      errors.password ? 'border-red-500' : 'border-gray-300'
-                    }`}
-                    placeholder="••••••••"
-                  />
-                  {errors.password && (
-                    <p className="mt-1 text-sm text-red-600 flex items-center">
-                      <AlertCircle className="w-4 h-4 mr-1" />
-                      {errors.password}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="formation"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    Formation souhaitée
-                  </label>
-                  <select
-                    id="formation"
-                    name="formation"
-                    value={formData.formation}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                      errors.formation ? 'border-red-500' : 'border-gray-300'
-                    }`}
-                  >
-                    <option value="">Sélectionnez une formation</option>
-                    <option value="android">Android Natif</option>
-                    <option value="react-native">React Native</option>
-                  </select>
-                  {errors.formation && (
-                    <p className="mt-1 text-sm text-red-600 flex items-center">
-                      <AlertCircle className="w-4 h-4 mr-1" />
-                      {errors.formation}
-                    </p>
-                  )}
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className={`w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg transition-colors ${
-                    isSubmitting
-                      ? 'opacity-50 cursor-not-allowed'
-                      : 'hover:bg-blue-700'
-                  }`}
-                >
-                  {isSubmitting ? 'Inscription en cours...' : "S'inscrire"}
-                </button>
-
-                {errors.submit && (
-                  <p className="text-sm text-red-600 text-center flex items-center justify-center">
-                    <AlertCircle className="w-4 h-4 mr-1" />
-                    {errors.submit}
-                  </p>
-                )}
-
-                <p className="text-sm text-gray-500 text-center mt-4">
-                  En vous inscrivant, vous acceptez nos conditions d'utilisation
-                  et notre politique de confidentialité
-                </p>
-              </form>
-            )}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function FeatureCard({ icon, title, description }) {
-  return (
-    <div className="bg-slate-800/50 p-8 rounded-xl text-white">
-      <div className="mb-4">{icon}</div>
-      <h3 className="text-xl font-bold mb-2">{title}</h3>
-      <p className="text-gray-400">{description}</p>
-    </div>
-  );
-}
-
-function CourseCard({ title, description, image, features }) {
-  return (
-    <div className="bg-slate-800/50 rounded-xl overflow-hidden">
-      <img src={image} alt={title} className="w-full h-48 object-cover" />
-      <div className="p-8">
-        <h3 className="text-2xl font-bold text-white mb-2">{title}</h3>
-        <p className="text-gray-400 mb-6">{description}</p>
-        <ul className="space-y-3">
-          {features.map((feature, index) => (
-            <li key={index} className="flex items-center text-gray-300">
-              <CheckCircle2 className="w-5 h-5 text-blue-500 mr-2" />
-              {feature}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
-}
-
-function TestimonialCard({ name, role, content, rating }) {
-  return (
-    <div className="bg-slate-800/50 p-8 rounded-xl text-white">
-      <div className="flex mb-4">
-        {[...Array(rating)].map((_, i) => (
-          <Star key={i} className="w-5 h-5 text-yellow-500 fill-yellow-500" />
-        ))}
-      </div>
-      <p className="text-gray-300 mb-6">{content}</p>
-      <div>
-        <p className="font-bold">{name}</p>
-        <p className="text-gray-400">{role}</p>
-      </div>
+      <RegisterModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onSubmit={handleSubmit}
+        formData={formData}
+        onChange={handleChange}
+        errors={errors}
+        isSubmitting={isSubmitting}
+        submitSuccess={submitSuccess}
+      />
     </div>
   );
 }
