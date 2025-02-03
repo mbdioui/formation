@@ -40,6 +40,7 @@ export function RegisterModal({
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+          aria-label="Fermer la modal d'inscription"
         >
           <X className="w-6 h-6" />
         </button>
@@ -50,7 +51,7 @@ export function RegisterModal({
 
         {submitSuccess ? (
           <div className="text-center py-8">
-            <CheckCircle2 className="w-16 h-16 text-green-500 mx-auto mb-4" />
+            <CheckCircle2 className="w-16 h-16 text-green-500 mx-auto mb-4" aria-hidden="true" />
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
               Inscription réussie !
             </h3>
@@ -77,10 +78,11 @@ export function RegisterModal({
                   errors.name ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="John Doe"
+                aria-describedby="name-error"
               />
               {errors.name && (
-                <p className="mt-1 text-sm text-red-600 flex items-center">
-                  <AlertCircle className="w-4 h-4 mr-1" />
+                <p className="mt-1 text-sm text-red-600 flex items-center" id="name-error">
+                  <AlertCircle className="w-4 h-4 mr-1" aria-hidden="true" />
                   {errors.name}
                 </p>
               )}
@@ -103,10 +105,11 @@ export function RegisterModal({
                   errors.email ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="john@example.com"
+                aria-describedby="email-error"
               />
               {errors.email && (
-                <p className="mt-1 text-sm text-red-600 flex items-center">
-                  <AlertCircle className="w-4 h-4 mr-1" />
+                <p className="mt-1 text-sm text-red-600 flex items-center" id="email-error">
+                  <AlertCircle className="w-4 h-4 mr-1" aria-hidden="true" />
                   {errors.email}
                 </p>
               )}
@@ -129,10 +132,11 @@ export function RegisterModal({
                   errors.password ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="••••••••"
+                aria-describedby="password-error"
               />
               {errors.password && (
-                <p className="mt-1 text-sm text-red-600 flex items-center">
-                  <AlertCircle className="w-4 h-4 mr-1" />
+                <p className="mt-1 text-sm text-red-600 flex items-center" id="password-error">
+                  <AlertCircle className="w-4 h-4 mr-1" aria-hidden="true" />
                   {errors.password}
                 </p>
               )}
@@ -153,14 +157,15 @@ export function RegisterModal({
                 className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
                   errors.formation ? 'border-red-500' : 'border-gray-300'
                 }`}
+                aria-describedby="formation-error"
               >
                 <option value="">Sélectionnez une formation</option>
                 <option value="android">Android Natif</option>
                 <option value="react-native">React Native</option>
               </select>
               {errors.formation && (
-                <p className="mt-1 text-sm text-red-600 flex items-center">
-                  <AlertCircle className="w-4 h-4 mr-1" />
+                <p className="mt-1 text-sm text-red-600 flex items-center" id="formation-error">
+                  <AlertCircle className="w-4 h-4 mr-1" aria-hidden="true" />
                   {errors.formation}
                 </p>
               )}
@@ -179,8 +184,8 @@ export function RegisterModal({
             </button>
 
             {errors.submit && (
-              <p className="text-sm text-red-600 text-center flex items-center justify-center">
-                <AlertCircle className="w-4 h-4 mr-1" />
+              <p className="text-sm text-red-600 text-center flex items-center justify-center" id="submit-error">
+                <AlertCircle className="w-4 h-4 mr-1" aria-hidden="true" />
                 {errors.submit}
               </p>
             )}

@@ -17,7 +17,7 @@ export function CourseCard({ title, description, image, features }: CourseCardPr
         <ul className="space-y-3">
           {features.map((feature, index) => (
             <li key={index} className="flex items-center text-gray-300">
-              <CheckCircle2 className="w-5 h-5 text-blue-500 mr-2" />
+              <CheckCircle2 className="w-5 h-5 text-blue-500 mr-2" aria-hidden="true" />
               {feature}
             </li>
           ))}

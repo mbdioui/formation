@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   BookOpen,
   Code2,
@@ -6,6 +6,7 @@ import {
   Users,
   LogIn,
   LogOut,
+  ArrowRight,
 } from 'lucide-react';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, User } from 'firebase/auth';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
@@ -15,6 +16,11 @@ import { CourseCard } from './components/CourseCard';
 import { TestimonialCard } from './components/TestimonialCard';
 import { LoginModal } from './components/LoginModal';
 import { RegisterModal } from './components/RegisterModal';
+import { HeroSection } from './components/HeroSection';
+import { WhyUsSection } from './components/WhyUsSection';
+import { CoursesSection } from './components/CoursesSection';
+import { TestimonialsSection } from './components/TestimonialsSection';
+import { CallToActionSection } from './components/CallToActionSection';
 
 interface FormData {
   name: string;
@@ -63,31 +69,31 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  const openModal = () => {
+  const openModal = useCallback(() => {
     setIsModalOpen(true);
     setFormData({ name: '', email: '', password: '', formation: '' });
     setErrors({});
     setSubmitSuccess(false);
-  };
+  }, []);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setIsModalOpen(false);
     setFormData({ name: '', email: '', password: '', formation: '' });
     setErrors({});
     setSubmitSuccess(false);
-  };
+  }, []);
 
-  const openLoginModal = () => {
+  const openLoginModal = useCallback(() => {
     setIsLoginModalOpen(true);
     setLoginFormData({ email: '', password: '' });
     setLoginError('');
-  };
+  }, []);
 
-  const closeLoginModal = () => {
+  const closeLoginModal = useCallback(() => {
     setIsLoginModalOpen(false);
     setLoginFormData({ email: '', password: '' });
     setLoginError('');
-  };
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -219,143 +225,30 @@ function App() {
         {currentUser ? (
           <button
             onClick={handleLogout}
-            className="flex items-center bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors"
+            className="flex items-center bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors"
           >
-            <LogOut className="w-5 h-5 mr-2" />
+            <LogOut className="w-5 h-5 mr-2" aria-label="Se déconnecter" />
             Se déconnecter
           </button>
         ) : (
           <button
             onClick={openLoginModal}
-            className="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors"
+            className="flex items-center bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors"
           >
-            <LogIn className="w-5 h-5 mr-2" />
+            <LogIn className="w-5 h-5 mr-2" aria-label="Se connecter" />
             Se connecter
           </button>
         )}
       </div>
 
-      <header className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-10 animate-gradient"></div>
-        
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-4 -left-4 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob"></div>
-          <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob animation-delay-2000"></div>
-          <div className="absolute -bottom-8 left-20 w-80 h-80 bg-indigo-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob animation-delay-4000"></div>
-        </div>
+      <HeroSection openModal={openModal} />
 
-        <div className="relative container mx-auto px-4 py-32">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-6xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600">
-              Devenez Développeur Mobile
-            </h1>
-            <p className="text-2xl text-gray-300 mb-12 leading-relaxed">
-              Maîtrisez le développement Android natif et React Native avec des
-              formations professionnelles adaptées à tous les niveaux
-            </p>
-            <button
-              onClick={openModal}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-lg text-lg transition-all transform hover:scale-105 hover:shadow-lg"
-            >
-              Commencer maintenant
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <section className="container mx-auto px-4 py-16">
-        <div className="grid md:grid-cols-3 gap-8">
-          <FeatureCard
-            icon={<BookOpen className="w-8 h-8 text-blue-500" />}
-            title="Cours Complets"
-            description="Des formations structurées couvrant tous les aspects du développement mobile"
-          />
-          <FeatureCard
-            icon={<Code2 className="w-8 h-8 text-blue-500" />}
-            title="Projets Pratiques"
-            description="Apprenez en créant des applications concrètes du début à la fin"
-          />
-          <FeatureCard
-            icon={<Users className="w-8 h-8 text-blue-500" />}
-            title="Communauté Active"
-            description="Rejoignez une communauté de développeurs passionnés"
-          />
-        </div>
-      </section>
-
-      <section className="container mx-auto px-4 py-16">
-        <h2 className="text-3xl font-bold text-white text-center mb-12">
-          Nos Formations
-        </h2>
-        <div className="grid md:grid-cols-2 gap-8">
-          <CourseCard
-            title="Android Natif"
-            description="Maîtrisez le développement Android avec Kotlin"
-            image="https://images.unsplash.com/photo-1607252650355-f7fd0460ccdb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80"
-            features={[
-              'Bases de Kotlin',
-              'Interface utilisateur native',
-              'Gestion des données',
-              'Publication sur le Play Store',
-            ]}
-          />
-          <CourseCard
-            title="React Native"
-            description="Créez des applications multiplateformes"
-            image="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80"
-            features={[
-              'JavaScript/TypeScript moderne',
-              'Components React Native',
-              'Navigation et state management',
-              'Déploiement iOS & Android',
-            ]}
-          />
-        </div>
-      </section>
-
-      <section className="container mx-auto px-4 py-16">
-        <h2 className="text-3xl font-bold text-white text-center mb-12">
-          Ce que disent nos étudiants
-        </h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <TestimonialCard
-            name="Marie L."
-            role="Développeuse Junior"
-            content="La formation Android m'a permis de décrocher mon premier emploi en tant que développeuse mobile."
-            rating={5}
-          />
-          <TestimonialCard
-            name="Thomas B."
-            role="Entrepreneur"
-            content="Grâce à React Native, j'ai pu créer l'application de ma startup en seulement quelques mois."
-            rating={5}
-          />
-          <TestimonialCard
-            name="Sophie M."
-            role="Freelance"
-            content="Une formation complète et professionnelle qui m'a donné toutes les clés pour réussir."
-            rating={5}
-          />
-        </div>
-      </section>
-
-      <section className="container mx-auto px-4 py-16">
-        <div className="bg-blue-600 rounded-2xl p-12 text-center">
-          <h2 className="text-3xl font-bold text-white mb-6">
-            Prêt à commencer votre carrière ?
-          </h2>
-          <p className="text-xl text-white/90 mb-8">
-            Inscrivez-vous maintenant et bénéficiez de 30% de réduction sur
-            votre première formation
-          </p>
-          <button
-            onClick={openModal}
-            className="bg-white text-blue-600 hover:bg-gray-100 font-bold py-4 px-8 rounded-lg text-lg transition-colors"
-          >
-            S'inscrire maintenant
-          </button>
-        </div>
-      </section>
+      <main>
+        <WhyUsSection />
+        <CoursesSection />
+        <TestimonialsSection />
+        <CallToActionSection openModal={openModal} />
+      </main>
 
       <LoginModal
         isOpen={isLoginModalOpen}

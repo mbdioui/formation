@@ -30,6 +30,7 @@ export function LoginModal({
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+          aria-label="Fermer la modal de connexion"
         >
           <X className="w-6 h-6" />
         </button>
@@ -54,6 +55,7 @@ export function LoginModal({
               onChange={onChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               placeholder="john@example.com"
+              aria-describedby="login-email-error"
             />
           </div>
 
@@ -72,12 +74,13 @@ export function LoginModal({
               onChange={onChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               placeholder="••••••••"
+              aria-describedby="login-password-error"
             />
           </div>
 
           {error && (
-            <p className="text-sm text-red-600 text-center flex items-center justify-center">
-              <AlertCircle className="w-4 h-4 mr-1" />
+            <p className="text-sm text-red-600 text-center flex items-center justify-center" id="login-error">
+              <AlertCircle className="w-4 h-4 mr-1" aria-hidden="true" />
               {error}
             </p>
           )}
