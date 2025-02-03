@@ -1,4 +1,6 @@
+import React from 'react';
 import { DivideIcon as LucideIcon } from 'lucide-react';
+import { theme } from '../theme';
 
 interface FeatureCardProps {
   icon: React.ReactNode;

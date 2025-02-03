@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
+import { theme } from '../theme';
 
 interface CallToActionSectionProps {
   openModal: () => void;

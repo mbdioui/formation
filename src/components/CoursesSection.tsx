@@ -1,5 +1,6 @@
 import React from 'react';
 import { CourseCard } from './CourseCard';
+import { theme } from '../theme';
 
 export function CoursesSection() {
   return (

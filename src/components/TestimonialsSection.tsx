@@ -1,5 +1,6 @@
 import React from 'react';
 import { TestimonialCard } from './TestimonialCard';
+import { theme } from '../theme';
 
 export function TestimonialsSection() {
   return (

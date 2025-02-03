@@ -1,4 +1,5 @@
 import { Star } from 'lucide-react';
+import { theme } from '../theme';
 
 interface TestimonialCardProps {
   name: string;

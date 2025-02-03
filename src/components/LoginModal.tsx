@@ -1,4 +1,6 @@
+import React from 'react';
 import { X, AlertCircle } from 'lucide-react';
+import { theme } from '../theme';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -79,7 +81,7 @@ export function LoginModal({
           </div>
 
           {error && (
-            <p className="text-sm text-red-600 text-center flex items-center justify-center" id="login-error">
+            <p className="text-sm text-accentRed text-center flex items-center justify-center" id="login-error">
               <AlertCircle className="w-4 h-4 mr-1" aria-hidden="true" />
               {error}
             </p>

@@ -1,4 +1,6 @@
+import React from 'react';
 import { X, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { theme } from '../theme';
 
 interface RegisterModalProps {
   isOpen: boolean;
@@ -81,7 +83,7 @@ export function RegisterModal({
                 aria-describedby="name-error"
               />
               {errors.name && (
-                <p className="mt-1 text-sm text-red-600 flex items-center" id="name-error">
+                <p className="mt-1 text-sm text-accentRed flex items-center" id="name-error">
                   <AlertCircle className="w-4 h-4 mr-1" aria-hidden="true" />
                   {errors.name}
                 </p>
@@ -108,7 +110,7 @@ export function RegisterModal({
                 aria-describedby="email-error"
               />
               {errors.email && (
-                <p className="mt-1 text-sm text-red-600 flex items-center" id="email-error">
+                <p className="mt-1 text-sm text-accentRed flex items-center" id="email-error">
                   <AlertCircle className="w-4 h-4 mr-1" aria-hidden="true" />
                   {errors.email}
                 </p>
@@ -135,7 +137,7 @@ export function RegisterModal({
                 aria-describedby="password-error"
               />
               {errors.password && (
-                <p className="mt-1 text-sm text-red-600 flex items-center" id="password-error">
+                <p className="mt-1 text-sm text-accentRed flex items-center" id="password-error">
                   <AlertCircle className="w-4 h-4 mr-1" aria-hidden="true" />
                   {errors.password}
                 </p>
@@ -143,10 +145,7 @@ export function RegisterModal({
             </div>
 
             <div>
-              <label
-                htmlFor="formation"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
+              <label>
                 Formation souhaitée
               </label>
               <select
@@ -164,7 +163,7 @@ export function RegisterModal({
                 <option value="react-native">React Native</option>
               </select>
               {errors.formation && (
-                <p className="mt-1 text-sm text-red-600 flex items-center" id="formation-error">
+                <p className="mt-1 text-sm text-accentRed flex items-center" id="formation-error">
                   <AlertCircle className="w-4 h-4 mr-1" aria-hidden="true" />
                   {errors.formation}
                 </p>
@@ -184,7 +183,7 @@ export function RegisterModal({
             </button>
 
             {errors.submit && (
-              <p className="text-sm text-red-600 text-center flex items-center justify-center" id="submit-error">
+              <p className="text-sm text-accentRed text-center flex items-center justify-center" id="submit-error">
                 <AlertCircle className="w-4 h-4 mr-1" aria-hidden="true" />
                 {errors.submit}
               </p>
