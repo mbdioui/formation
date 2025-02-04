@@ -7,6 +7,7 @@ import {
   LogIn,
   LogOut,
   ArrowRight,
+  LayoutDashboard,
 } from 'lucide-react';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, User } from 'firebase/auth';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
@@ -21,6 +22,7 @@ import { WhyUsSection } from './components/WhyUsSection';
 import { CoursesSection } from './components/CoursesSection';
 import { TestimonialsSection } from './components/TestimonialsSection';
 import { CallToActionSection } from './components/CallToActionSection';
+import { Dashboard } from './components/Dashboard';
 
 interface FormData {
   name: string;
@@ -60,6 +62,7 @@ function App() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [activeTab, setActiveTab] = useState<'home' | 'dashboard'>('home');
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -221,34 +224,65 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
-      <div className="container mx-auto px-4 py-4 flex justify-end">
-        {currentUser ? (
+      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+        <nav className="flex space-x-4">
           <button
-            onClick={handleLogout}
-            className="flex items-center bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors"
+            onClick={() => setActiveTab('home')}
+            className={`text-white hover:text-gray-300 transition-colors ${
+              activeTab === 'home' ? 'font-bold' : ''
+            }`}
           >
-            <LogOut className="w-5 h-5 mr-2" aria-label="Se déconnecter" />
-            Se déconnecter
+            Accueil
           </button>
-        ) : (
-          <button
-            onClick={openLoginModal}
-            className="flex items-center bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors"
-          >
-            <LogIn className="w-5 h-5 mr-2" aria-label="Se connecter" />
-            Se connecter
-          </button>
-        )}
+          {currentUser && (
+            <button
+              onClick={() => setActiveTab('dashboard')}
+              className={`text-white hover:text-gray-300 transition-colors flex items-center ${
+                activeTab === 'dashboard' ? 'font-bold' : ''
+              }`}
+            >
+              <LayoutDashboard className="w-4 h-4 mr-1" />
+              Dashboard
+            </button>
+          )}
+        </nav>
+
+        <div>
+          {currentUser ? (
+            <button
+              onClick={handleLogout}
+              className="flex items-center bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors"
+            >
+              <LogOut className="w-5 h-5 mr-2" aria-label="Se déconnecter" />
+              Se déconnecter
+            </button>
+          ) : (
+            <button
+              onClick={openLoginModal}
+              className="flex items-center bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors"
+            >
+              <LogIn className="w-5 h-5 mr-2" aria-label="Se connecter" />
+              Se connecter
+            </button>
+          )}
+        </div>
       </div>
 
-      <HeroSection openModal={openModal} />
+      {activeTab === 'home' && (
+        <>
+          <HeroSection openModal={openModal} />
+          <main>
+            <WhyUsSection />
+            <CoursesSection />
+            <TestimonialsSection />
+            <CallToActionSection openModal={openModal} />
+          </main>
+        </>
+      )}
 
-      <main>
-        <WhyUsSection />
-        <CoursesSection />
-        <TestimonialsSection />
-        <CallToActionSection openModal={openModal} />
-      </main>
+      {activeTab === 'dashboard' && currentUser && (
+        <Dashboard />
+      )}
 
       <LoginModal
         isOpen={isLoginModalOpen}
