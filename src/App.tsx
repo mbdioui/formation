@@ -63,7 +63,7 @@ function App() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [activeTab, setActiveTab] = useState<'home' | 'dashboard'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'dashboard' | 'admin'>('home');
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
@@ -261,11 +261,11 @@ function App() {
               Dashboard
             </button>
           )}
-          {isAdmin && (
+          {currentUser && isAdmin && (
             <button
-              onClick={() => setActiveTab('dashboard')}
+              onClick={() => setActiveTab('admin')}
               className={`text-white hover:text-gray-300 transition-colors flex items-center ${
-                activeTab === 'dashboard' ? 'font-bold' : ''
+                activeTab === 'admin' ? 'font-bold' : ''
               }`}
             >
               <LayoutDashboard className="w-4 h-4 mr-1" />
@@ -307,13 +307,9 @@ function App() {
         </>
       )}
 
-      {activeTab === 'dashboard' && currentUser && isAdmin && (
-        <AdminDashboard />
-      )}
+      {activeTab === 'dashboard' && currentUser && <Dashboard />}
 
-      {activeTab === 'dashboard' && currentUser && !isAdmin && (
-        <Dashboard />
-      )}
+      {activeTab === 'admin' && currentUser && isAdmin && <AdminDashboard />}
 
       <LoginModal
         isOpen={isLoginModalOpen}
