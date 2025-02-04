@@ -10,7 +10,7 @@ import {
   LayoutDashboard,
 } from 'lucide-react';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, User } from 'firebase/auth';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, getDocs, query, where } from 'firebase/firestore';
 import { auth, db } from './firebase';
 import { FeatureCard } from './components/FeatureCard';
 import { CourseCard } from './components/CourseCard';
@@ -23,6 +23,7 @@ import { CoursesSection } from './components/CoursesSection';
 import { TestimonialsSection } from './components/TestimonialsSection';
 import { CallToActionSection } from './components/CallToActionSection';
 import { Dashboard } from './components/Dashboard';
+import { AdminDashboard } from './components/AdminDashboard';
 
 interface FormData {
   name: string;
@@ -63,10 +64,23 @@ function App() {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [activeTab, setActiveTab] = useState<'home' | 'dashboard'>('home');
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
+      if (user) {
+        const q = query(collection(db, 'users'), where('uid', '==', user.uid));
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+          const userData = querySnapshot.docs[0].data();
+          setIsAdmin(userData.isAdmin === true);
+        } else {
+          setIsAdmin(false);
+        }
+      } else {
+        setIsAdmin(false);
+      }
     });
 
     return () => unsubscribe();
@@ -101,6 +115,7 @@ function App() {
   const handleLogout = async () => {
     try {
       await signOut(auth);
+      setActiveTab('home');
     } catch (error) {
       console.error('Error signing out:', error);
     }
@@ -183,6 +198,7 @@ function App() {
         email: formData.email,
         formation: formData.formation,
         createdAt: serverTimestamp(),
+        isAdmin: formData.email === 'admin@example.com'
       });
 
       await signOut(auth);
@@ -245,6 +261,17 @@ function App() {
               Dashboard
             </button>
           )}
+          {isAdmin && (
+            <button
+              onClick={() => setActiveTab('dashboard')}
+              className={`text-white hover:text-gray-300 transition-colors flex items-center ${
+                activeTab === 'dashboard' ? 'font-bold' : ''
+              }`}
+            >
+              <LayoutDashboard className="w-4 h-4 mr-1" />
+              Admin Dashboard
+            </button>
+          )}
         </nav>
 
         <div>
@@ -280,7 +307,11 @@ function App() {
         </>
       )}
 
-      {activeTab === 'dashboard' && currentUser && (
+      {activeTab === 'dashboard' && currentUser && isAdmin && (
+        <AdminDashboard />
+      )}
+
+      {activeTab === 'dashboard' && currentUser && !isAdmin && (
         <Dashboard />
       )}
 
