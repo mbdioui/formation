@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { getStorage, ref, listAll, getDownloadURL } from 'firebase/storage';
 
 interface Video {
   name: string;
@@ -13,18 +12,22 @@ export function UploadedVideos() {
 
   useEffect(() => {
     const fetchVideos = async () => {
+      setLoading(true);
+      setError('');
       try {
-        const storage = getStorage();
-        const videosRef = ref(storage, 'videos/');
-        const listResult = await listAll(videosRef);
+        // Directly access files from the 'videos' public directory
+        const videoFiles = [
+          'Simulator.mp4',
+          // Add more video file names as needed, or dynamically fetch them if possible
+        ];
 
-        const videoPromises = listResult.items.map(async (itemRef) => {
-          const url = await getDownloadURL(itemRef);
-          return { name: itemRef.name, url };
-        });
-
-        const videosData = await Promise.all(videoPromises);
+        const videosData = videoFiles.map(name => ({
+          name: name,
+          url: `/videos/${name}` // URL to access the video via 'serve'
+        }));
         setVideos(videosData);
+
+
       } catch (error: any) {
         console.error('Error fetching videos:', error);
         setError('Failed to load videos.');
@@ -48,17 +51,21 @@ export function UploadedVideos() {
     <div>
       <h3 className="text-xl font-bold mb-4">Uploaded Videos</h3>
       {videos.length === 0 ? (
-        <p className="text-gray-300">No videos uploaded yet.</p>
+        <p className="text-gray-300">No videos uploaded yet. Please place video files in the "videos" folder in the project root.</p>
       ) : (
-        <ul className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {videos.map((video) => (
-            <li key={video.name} className="bg-gray-700 p-4 rounded-lg">
-              <a href={video.url} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">
-                {video.name}
-              </a>
-            </li>
+            <div key={video.name} className="bg-gray-700 rounded-lg overflow-hidden">
+              <video controls className="w-full h-auto">
+                <source src={video.url} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              <div className="p-4">
+                <h4 className="text-lg font-semibold text-white">{video.name}</h4>
+              </div>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );

@@ -17,4 +17,5 @@ export default defineConfig({
       },
     },
   },
+  publicDir: 'videos', // Serve videos from the 'videos' directory
 });
