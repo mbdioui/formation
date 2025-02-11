@@ -245,7 +245,7 @@ function App() {
           <button
             onClick={() => setActiveTab('home')}
             className={`text-white hover:text-gray-300 transition-colors ${
-              activeTab === 'home' ? 'font-bold' : ''
+              activeTab === 'home' ? 'font-bold border-b-2 border-white pb-1' : ''
             }`}
           >
             Accueil
@@ -254,7 +254,7 @@ function App() {
             <button
               onClick={() => setActiveTab('dashboard')}
               className={`text-white hover:text-gray-300 transition-colors flex items-center ${
-                activeTab === 'dashboard' ? 'font-bold' : ''
+                activeTab === 'dashboard' ? 'font-bold border-b-2 border-white pb-1' : ''
               }`}
             >
               <LayoutDashboard className="w-4 h-4 mr-1" />
@@ -265,7 +265,7 @@ function App() {
             <button
               onClick={() => setActiveTab('admin')}
               className={`text-white hover:text-gray-300 transition-colors flex items-center ${
-                activeTab === 'admin' ? 'font-bold' : ''
+                activeTab === 'admin' ? 'font-bold border-b-2 border-white pb-1' : ''
               }`}
             >
               <LayoutDashboard className="w-4 h-4 mr-1" />
