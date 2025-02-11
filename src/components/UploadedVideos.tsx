@@ -18,6 +18,7 @@ export function UploadedVideos() {
         // Directly access files from the 'videos' public directory
         const videoFiles = [
           'Simulator.mp4',
+          'Banner_T03.mp4'
           // Add more video file names as needed, or dynamically fetch them if possible
         ];
 
@@ -55,8 +56,8 @@ export function UploadedVideos() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {videos.map((video) => (
-            <div key={video.name} className="bg-gray-700 rounded-lg overflow-hidden">
-              <video controls className="w-full h-auto">
+            <div key={video.name} className="bg-gray-700 rounded-lg overflow-hidden shadow-md">
+              <video controls className="w-full aspect-video">
                 <source src={video.url} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
